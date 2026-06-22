@@ -9,7 +9,7 @@ interface AestheticMovementCardProps {
 }
 
 export default function AestheticMovementCard({ movement, index }: AestheticMovementCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(true)
 
   return (
     <motion.div
@@ -53,11 +53,14 @@ export default function AestheticMovementCard({ movement, index }: AestheticMove
               className="movement-expand-btn"
               style={{ '--accent': movement.accentColor } as React.CSSProperties}
             >
+              <span className="font-sans text-[11px] tracking-wide mr-1.5">
+                {isExpanded ? '收起' : '查看详情'}
+              </span>
               <motion.div
                 animate={{ rotate: isExpanded ? 180 : 0 }}
                 transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                <ChevronDown size={16} strokeWidth={1.5} />
+                <ChevronDown size={14} strokeWidth={1.5} />
               </motion.div>
             </button>
           </div>

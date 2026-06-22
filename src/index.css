@@ -73,8 +73,8 @@ body {
   }
 
   .movement-expand-btn {
-    @apply flex items-center justify-center
-           w-8 h-8 rounded-full border border-neutral-200
+    @apply inline-flex items-center justify-center gap-0.5
+           h-8 pl-3 pr-2.5 rounded-full border border-neutral-200
            text-neutral-400 transition-all duration-300
            hover:border-neutral-400 hover:text-neutral-600
            shrink-0 mt-1;

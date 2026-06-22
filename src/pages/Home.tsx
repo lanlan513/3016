@@ -1,11 +1,12 @@
 import Header from '@/components/Header'
 import UploadZone from '@/components/UploadZone'
 import AnalysisPanel from '@/components/AnalysisPanel'
-import { motion } from 'motion/react'
+import AestheticMovements from '@/components/AestheticMovements'
+import { motion, AnimatePresence } from 'motion/react'
 import { useAnalysisStore } from '@/store/useAnalysisStore'
 
 export default function Home() {
-  const { status } = useAnalysisStore()
+  const { status, result } = useAnalysisStore()
   const hasResult = status === 'complete'
 
   return (
@@ -37,6 +38,20 @@ export default function Home() {
         >
           <UploadZone />
         </motion.section>
+
+        <AnimatePresence>
+          {hasResult && result && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mt-16"
+            >
+              <AestheticMovements tags={result.tags} />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <AnalysisPanel />
       </main>

@@ -1,15 +1,23 @@
 import { useState, useRef, useEffect } from 'react'
 import type { CompositionLine } from '@/types/analysis'
 import CompositionOverlay from './CompositionOverlay'
-import { Grid3x3, Layers } from 'lucide-react'
-import { useAnalysisStore } from '@/store/useAnalysisStore'
+import CompositionGuideOverlay from './CompositionGuideOverlay'
+import { Grid3x3, Layers, Diamond, Triangle, Minus } from 'lucide-react'
+import { useAnalysisStore, type GuideMode } from '@/store/useAnalysisStore'
 
 interface CompositionAnalyzerProps {
   composition: CompositionLine[]
 }
 
+const guideOptions: { mode: GuideMode; label: string; icon: typeof Grid3x3 }[] = [
+  { mode: null, label: '关闭', icon: Minus },
+  { mode: 'thirds', label: '三分法', icon: Grid3x3 },
+  { mode: 'golden', label: '黄金分割', icon: Diamond },
+  { mode: 'diagonal', label: '对角线', icon: Triangle },
+]
+
 export default function CompositionAnalyzer({ composition }: CompositionAnalyzerProps) {
-  const { imageUrl } = useAnalysisStore()
+  const { imageUrl, guideMode, setGuideMode } = useAnalysisStore()
   const imgRef = useRef<HTMLImageElement>(null)
   const [dimensions, setDimensions] = useState({ width: 640, height: 400 })
 
@@ -72,6 +80,40 @@ export default function CompositionAnalyzer({ composition }: CompositionAnalyzer
             imageHeight={dimensions.height}
           />
         )}
+        {imageUrl && guideMode && (
+          <CompositionGuideOverlay
+            mode={guideMode}
+            imageWidth={dimensions.width}
+            imageHeight={dimensions.height}
+          />
+        )}
+      </div>
+
+      <div className="mt-5 flex items-center justify-center gap-1">
+        <span className="font-sans text-[10px] text-neutral-400 tracking-widest uppercase mr-3">
+          构图辅助线
+        </span>
+        {guideOptions.map((opt) => {
+          const Icon = opt.icon
+          const isActive = guideMode === opt.mode
+          return (
+            <button
+              key={opt.label}
+              onClick={() => setGuideMode(opt.mode)}
+              className={`
+                inline-flex items-center gap-1.5 px-3 py-1.5 border transition-all duration-200
+                font-sans text-[11px] tracking-wide
+                ${isActive
+                  ? 'border-neutral-900 bg-neutral-900 text-white'
+                  : 'border-neutral-200 bg-white text-neutral-500 hover:border-neutral-400 hover:text-neutral-700'
+                }
+              `}
+            >
+              <Icon size={12} strokeWidth={isActive ? 2 : 1.5} />
+              {opt.label}
+            </button>
+          )
+        })}
       </div>
 
       <div className="mt-8 space-y-6">

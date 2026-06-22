@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+  color: #1A1A1A;
+  background-color: #FFFFFF;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: #1A1A1A;
+  color: #FFFFFF;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  .section-divider {
+    @apply w-12 h-px bg-neutral-300 mx-auto;
+  }
+
+  .tag-pill {
+    @apply inline-flex items-center px-4 py-1.5 rounded-full border border-neutral-200
+           text-sm font-sans tracking-wide text-neutral-700
+           transition-all duration-300 ease-out
+           hover:border-neutral-400 hover:bg-neutral-50;
+  }
+
+  .analysis-section-title {
+    @apply font-display text-xl tracking-wide text-neutral-900 mb-6;
+  }
+}
+
+@layer utilities {
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-500 { animation-delay: 500ms; }
+  .animation-delay-600 { animation-delay: 600ms; }
+  .animation-delay-700 { animation-delay: 700ms; }
+  .animation-delay-800 { animation-delay: 800ms; }
+}

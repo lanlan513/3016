@@ -4,6 +4,7 @@ import { loadImageToCanvas, extractPalette } from '@/utils/colorExtractor'
 import { analyzeComposition } from '@/utils/compositionAnalyzer'
 import { generateStyleTags } from '@/utils/styleTagGenerator'
 import PaletteExtractor from './PaletteExtractor'
+import ColorMatrix from './ColorMatrix'
 import CompositionAnalyzer from './CompositionAnalyzer'
 import StyleTagCloud from './StyleTagCloud'
 import { motion, AnimatePresence } from 'motion/react'
@@ -80,6 +81,12 @@ export default function AnalysisPanel() {
           >
             <div>
               <PaletteExtractor palette={result.palette} />
+            </div>
+
+            <div className="section-divider" />
+
+            <div>
+              <ColorMatrix palette={result.palette} />
             </div>
 
             <div className="section-divider" />

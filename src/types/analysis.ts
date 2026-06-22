@@ -41,3 +41,56 @@ export interface AnalysisResult {
 }
 
 export type AnalysisStatus = 'idle' | 'loading' | 'analyzing' | 'complete' | 'error'
+
+export type CourseCategory = 'color' | 'composition' | 'movement'
+
+export interface ConceptExample {
+  description: string
+  visualHint: string
+}
+
+export interface AestheticConcept {
+  id: string
+  name: string
+  category: CourseCategory
+  summary: string
+  detail: string
+  examples: ConceptExample[]
+  contrastExample?: ConceptExample
+  difficulty: 1 | 2 | 3
+}
+
+export interface CourseLesson {
+  id: string
+  title: string
+  conceptIds: string[]
+  order: number
+}
+
+export interface CoursePath {
+  id: CourseCategory
+  name: string
+  nameEn: string
+  description: string
+  icon: string
+  lessons: CourseLesson[]
+  accentColor: string
+}
+
+export interface LearningCard {
+  id: string
+  concept: AestheticConcept
+  relevance: number
+  evidence: string
+  generatedAt: number
+  expanded: boolean
+  completed: boolean
+}
+
+export interface LearningProgress {
+  totalCards: number
+  completedCards: number
+  unlockedConcepts: string[]
+  viewedConcepts: string[]
+  categoryProgress: Record<CourseCategory, { learned: number; total: number }>
+}

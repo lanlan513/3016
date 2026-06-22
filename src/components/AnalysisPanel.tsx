@@ -3,6 +3,7 @@ import { useAnalysisStore } from '@/store/useAnalysisStore'
 import { loadImageToCanvas, extractPalette } from '@/utils/colorExtractor'
 import { analyzeComposition } from '@/utils/compositionAnalyzer'
 import { generateStyleTags } from '@/utils/styleTagGenerator'
+import { generateLearningCards } from '@/utils/learningCardGenerator'
 import PaletteExtractor from './PaletteExtractor'
 import ColorMatrix from './ColorMatrix'
 import CompositionAnalyzer from './CompositionAnalyzer'
@@ -10,7 +11,7 @@ import StyleTagCloud from './StyleTagCloud'
 import { motion, AnimatePresence } from 'motion/react'
 
 export default function AnalysisPanel() {
-  const { status, result, imageFile, setStatus, setResult } = useAnalysisStore()
+  const { status, result, imageFile, learningMode, setStatus, setResult, setLearningCards } = useAnalysisStore()
   const analyzedRef = useRef<string | null>(null)
 
   const runAnalysis = useCallback(async () => {
@@ -37,11 +38,18 @@ export default function AnalysisPanel() {
 
       const tags = generateStyleTags(palette, composition)
 
-      setResult({ palette, composition, tags })
+      const analysisResult = { palette, composition, tags }
+      setResult(analysisResult)
+
+      if (learningMode) {
+        await new Promise((r) => setTimeout(r, 300))
+        const cards = generateLearningCards(analysisResult)
+        setLearningCards(cards)
+      }
     } catch {
       setStatus('error')
     }
-  }, [imageFile, setStatus, setResult])
+  }, [imageFile, learningMode, setStatus, setResult, setLearningCards])
 
   useEffect(() => {
     if (status === 'loading' && imageFile) {

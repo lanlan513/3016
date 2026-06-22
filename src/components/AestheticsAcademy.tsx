@@ -427,17 +427,14 @@ function AcademyContent({
       </div>
 
       <div className="flex-1 overflow-y-auto p-5 space-y-3 scrollbar-thin">
-        {(activeCourseTab
-          ? coursePaths.filter((p) => p.id === activeCourseTab)
-          : coursePaths
-        ).map((path) => (
+        {coursePaths.map((path) => (
           <CourseSection
             key={path.id}
             path={path}
             progress={learningProgress.categoryProgress[path.id]}
             unlockedConcepts={learningProgress.unlockedConcepts}
             viewedConcepts={learningProgress.viewedConcepts}
-            isActive={activeCourseTab === path.id || !activeCourseTab}
+            isActive={activeCourseTab === path.id}
             onToggle={() =>
               setActiveCourseTab(activeCourseTab === path.id ? null : path.id)
             }

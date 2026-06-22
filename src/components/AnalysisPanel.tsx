@@ -11,7 +11,7 @@ import StyleTagCloud from './StyleTagCloud'
 import { motion, AnimatePresence } from 'motion/react'
 
 export default function AnalysisPanel() {
-  const { status, result, imageFile, learningMode, setStatus, setResult, setLearningCards } = useAnalysisStore()
+  const { status, result, imageFile, learningMode, learningCards, setStatus, setResult, setLearningCards } = useAnalysisStore()
   const analyzedRef = useRef<string | null>(null)
 
   const runAnalysis = useCallback(async () => {
@@ -56,6 +56,13 @@ export default function AnalysisPanel() {
       runAnalysis()
     }
   }, [status, imageFile, runAnalysis])
+
+  useEffect(() => {
+    if (learningMode && status === 'complete' && result && learningCards.length === 0) {
+      const cards = generateLearningCards(result)
+      setLearningCards(cards)
+    }
+  }, [learningMode, status, result, learningCards.length, setLearningCards])
 
   if (status === 'idle') return null
 

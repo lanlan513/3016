@@ -5,6 +5,7 @@ import AestheticMovements from '@/components/AestheticMovements'
 import AestheticWhitepaper from '@/components/AestheticWhitepaper'
 import AestheticsAcademy from '@/components/AestheticsAcademy'
 import LearningCard from '@/components/LearningCard'
+import ReverseGenerator from '@/components/ReverseGenerator'
 import { motion, AnimatePresence } from 'motion/react'
 import { Sparkles, ArrowUpRight, GraduationCap, Lightbulb, ChevronRight } from 'lucide-react'
 import { useAnalysisStore } from '@/store/useAnalysisStore'
@@ -187,6 +188,21 @@ export default function Home() {
             </AnimatePresence>
 
             <AnalysisPanel />
+
+            <AnimatePresence>
+              {hasResult && !learningMode && (
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.6, delay: 0.35 }}
+                  className="mt-20"
+                >
+                  <div className="section-divider mb-10" />
+                  <ReverseGenerator />
+                </motion.section>
+              )}
+            </AnimatePresence>
 
             <AnimatePresence>
               {hasResult && (

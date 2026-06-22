@@ -94,3 +94,51 @@ export interface LearningProgress {
   viewedConcepts: string[]
   categoryProgress: Record<CourseCategory, { learned: number; total: number }>
 }
+
+export type VariantType = 'minimalist' | 'emotional' | 'deconstructive'
+
+export interface TrajectoryStep<T> {
+  label: string
+  value: T
+}
+
+export interface ColorTrajectory {
+  original: ColorSwatch[]
+  target: ColorSwatch[]
+  steps: TrajectoryStep<ColorSwatch[]>[]
+  description: string
+}
+
+export interface CompositionTrajectory {
+  originalLines: CompositionLine[]
+  targetLines: CompositionLine[]
+  transformation: string
+  description: string
+}
+
+export interface StyleTagTrajectory {
+  original: StyleTag[]
+  target: StyleTag[]
+  added: string[]
+  removed: string[]
+  description: string
+}
+
+export interface AestheticVariant {
+  id: string
+  type: VariantType
+  name: string
+  nameEn: string
+  description: string
+  philosophy: string
+  palette: ColorSwatch[]
+  composition: CompositionLine[]
+  tags: StyleTag[]
+  colorTrajectory: ColorTrajectory
+  compositionTrajectory: CompositionTrajectory
+  tagTrajectory: StyleTagTrajectory
+  accentColor: string
+  previewCanvasDataUrl?: string
+}
+
+export type VariantGenerationStatus = 'idle' | 'generating' | 'complete' | 'error'

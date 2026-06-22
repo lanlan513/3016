@@ -5,6 +5,8 @@ import type {
   LearningCard,
   LearningProgress,
   CourseCategory,
+  AestheticVariant,
+  VariantGenerationStatus,
 } from '@/types/analysis'
 
 export type GuideMode = 'thirds' | 'golden' | 'diagonal' | null
@@ -22,6 +24,9 @@ interface AnalysisStore {
   learningCards: LearningCard[]
   activeCardId: string | null
   learningProgress: LearningProgress
+  variants: AestheticVariant[]
+  variantStatus: VariantGenerationStatus
+  activeVariantId: string | null
   setImage: (file: File, url: string) => void
   setResult: (result: AnalysisResult) => void
   setStatus: (status: AnalysisStatus) => void
@@ -38,6 +43,9 @@ interface AnalysisStore {
   completeLearningCard: (cardId: string) => void
   setActiveCardId: (cardId: string | null) => void
   markConceptViewed: (conceptId: string) => void
+  setVariants: (variants: AestheticVariant[]) => void
+  setVariantStatus: (status: VariantGenerationStatus) => void
+  setActiveVariantId: (id: string | null) => void
   reset: () => void
 }
 
@@ -68,12 +76,23 @@ export const useAnalysisStore = create<AnalysisStore>((set, get) => ({
   learningCards: [],
   activeCardId: null,
   learningProgress: initialProgress,
+  variants: [],
+  variantStatus: 'idle',
+  activeVariantId: null,
   setImage: (file, url) => {
     if (currentObjectUrl) {
       URL.revokeObjectURL(currentObjectUrl)
     }
     currentObjectUrl = url
-    set({ imageFile: file, imageUrl: url, status: 'loading', learningCards: [] })
+    set({
+      imageFile: file,
+      imageUrl: url,
+      status: 'loading',
+      learningCards: [],
+      variants: [],
+      variantStatus: 'idle',
+      activeVariantId: null,
+    })
   },
   setResult: (result) => set({ result, status: 'complete' }),
   setStatus: (status) => set({ status }),
@@ -153,6 +172,14 @@ export const useAnalysisStore = create<AnalysisStore>((set, get) => ({
         },
       }
     }),
+  setVariants: (variants) =>
+    set({
+      variants,
+      variantStatus: 'complete',
+      activeVariantId: variants.length > 0 ? variants[0].id : null,
+    }),
+  setVariantStatus: (status) => set({ variantStatus: status }),
+  setActiveVariantId: (id) => set({ activeVariantId: id }),
   reset: () => {
     if (currentObjectUrl) {
       URL.revokeObjectURL(currentObjectUrl)
@@ -168,6 +195,9 @@ export const useAnalysisStore = create<AnalysisStore>((set, get) => ({
       guideMode: null,
       learningCards: [],
       activeCardId: null,
+      variants: [],
+      variantStatus: 'idle',
+      activeVariantId: null,
       learningProgress: {
         ...keepProgress,
         totalCards: 0,

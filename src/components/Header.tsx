@@ -1,3 +1,5 @@
+import AestheticWhitepaper from './AestheticWhitepaper'
+
 export default function Header() {
   return (
     <header className="w-full py-8 flex items-center justify-between max-w-[960px] mx-auto px-6">
@@ -9,9 +11,12 @@ export default function Header() {
           视觉解构
         </span>
       </div>
-      <span className="font-sans text-xs tracking-widest text-neutral-400 uppercase">
-        Visual Deconstruct
-      </span>
+      <div className="hidden md:flex items-center gap-6">
+        <span className="font-sans text-xs tracking-widest text-neutral-400 uppercase">
+          Visual Deconstruct
+        </span>
+        <AestheticWhitepaper />
+      </div>
     </header>
   )
 }

@@ -30,6 +30,7 @@ export default {
       animation: {
         'pulse-border': 'pulse-border 2s ease-in-out infinite',
         'fade-in-up': 'fade-in-up 0.6s ease-out forwards',
+        'fade-in': 'fade-in 0.8s ease-out forwards',
         'draw-line': 'draw-line 1.5s ease-out forwards',
         'swatch-pop': 'swatch-pop 0.4s ease-out forwards',
       },
@@ -41,6 +42,10 @@ export default {
         'fade-in-up': {
           '0%': { opacity: '0', transform: 'translateY(12px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         },
         'draw-line': {
           '0%': { strokeDashoffset: '100%' },

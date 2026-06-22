@@ -112,20 +112,22 @@ function detectLines(magnitude: Float32Array, direction: Float32Array, width: nu
         break
     }
 
+    const typeLabel = type === 'horizontal' ? '主水平线' : type === 'vertical' ? '主垂直线' : '主对角线'
     lines.push({
       type: type === 'diagonalRight' || type === 'diagonalLeft' ? 'diagonal' : type as 'horizontal' | 'vertical',
       angle,
       strength,
       startPoint: { x: startPt.x / width, y: startPt.y / height },
       endPoint: { x: endPt.x / width, y: endPt.y / height },
+      label: typeLabel,
     })
   }
 
   const ruleOfThirdsLines: CompositionLine[] = [
-    { type: 'horizontal', angle: 0, strength: 0.15, startPoint: { x: 0, y: 1 / 3 }, endPoint: { x: 1, y: 1 / 3 } },
-    { type: 'horizontal', angle: 0, strength: 0.15, startPoint: { x: 0, y: 2 / 3 }, endPoint: { x: 1, y: 2 / 3 } },
-    { type: 'vertical', angle: 90, strength: 0.15, startPoint: { x: 1 / 3, y: 0 }, endPoint: { x: 1 / 3, y: 1 } },
-    { type: 'vertical', angle: 90, strength: 0.15, startPoint: { x: 2 / 3, y: 0 }, endPoint: { x: 2 / 3, y: 1 } },
+    { type: 'horizontal', angle: 0, strength: 0.08, startPoint: { x: 0, y: 1 / 3 }, endPoint: { x: 1, y: 1 / 3 }, isGuide: true, label: '三分法·上' },
+    { type: 'horizontal', angle: 0, strength: 0.08, startPoint: { x: 0, y: 2 / 3 }, endPoint: { x: 1, y: 2 / 3 }, isGuide: true, label: '三分法·下' },
+    { type: 'vertical', angle: 90, strength: 0.08, startPoint: { x: 1 / 3, y: 0 }, endPoint: { x: 1 / 3, y: 1 }, isGuide: true, label: '三分法·左' },
+    { type: 'vertical', angle: 90, strength: 0.08, startPoint: { x: 2 / 3, y: 0 }, endPoint: { x: 2 / 3, y: 1 }, isGuide: true, label: '三分法·右' },
   ]
 
   return [...lines, ...ruleOfThirdsLines].sort((a, b) => b.strength - a.strength).slice(0, 8)

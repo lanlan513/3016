@@ -1,5 +1,5 @@
 import type { CompositionLine } from '@/types/analysis'
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useMemo } from 'react'
 
 interface CompositionOverlayProps {
   lines: CompositionLine[]
@@ -9,6 +9,12 @@ interface CompositionOverlayProps {
 
 export default function CompositionOverlay({ lines, imageWidth, imageHeight }: CompositionOverlayProps) {
   const svgRef = useRef<SVGSVGElement>(null)
+
+  const { detectedLines, guideLines } = useMemo(() => {
+    const detected = lines.filter((l) => !l.isGuide)
+    const guide = lines.filter((l) => l.isGuide)
+    return { detectedLines: detected, guideLines: guide }
+  }, [lines])
 
   useEffect(() => {
     if (!svgRef.current) return
@@ -21,27 +27,22 @@ export default function CompositionOverlay({ lines, imageWidth, imageHeight }: C
           )
         : 0
       if (path instanceof SVGLineElement) {
-        path.style.strokeDasharray = `${length}`
-        path.style.strokeDashoffset = `${length}`
-        path.style.animation = `draw-line 1.5s ease-out forwards`
+        const isGuide = path.getAttribute('data-guide') === 'true'
+        if (isGuide) {
+          path.style.strokeDasharray = '6,6'
+          path.style.opacity = '0'
+          path.style.animation = `fade-in 0.8s ease-out forwards`
+        } else {
+          path.style.strokeDasharray = `${length}`
+          path.style.strokeDashoffset = `${length}`
+          path.style.animation = `draw-line 1.5s ease-out forwards`
+        }
       }
     })
-  }, [lines])
+  }, [detectedLines, guideLines])
 
   const w = imageWidth
   const h = imageHeight
-
-  const lineColor = (line: CompositionLine) => {
-    if (line.strength < 0.1) return 'rgba(255,255,255,0.2)'
-    if (line.strength < 0.2) return 'rgba(255,255,255,0.4)'
-    return 'rgba(255,255,255,0.7)'
-  }
-
-  const strokeWidth = (line: CompositionLine) => {
-    if (line.strength < 0.1) return 0.5
-    if (line.strength < 0.2) return 0.8
-    return 1.2
-  }
 
   return (
     <svg
@@ -49,39 +50,45 @@ export default function CompositionOverlay({ lines, imageWidth, imageHeight }: C
       viewBox={`0 0 ${w} ${h}`}
       className="absolute inset-0 w-full h-full pointer-events-none"
       preserveAspectRatio="xMidYMid meet"
+      style={{ mixBlendMode: 'difference' }}
     >
-      {lines.map((line, i) => {
+      {guideLines.map((line, i) => {
         const x1 = line.startPoint.x * w
         const y1 = line.startPoint.y * h
         const x2 = line.endPoint.x * w
         const y2 = line.endPoint.y * h
-
         return (
           <line
-            key={i}
+            key={`guide-${i}`}
             x1={x1}
             y1={y1}
             x2={x2}
             y2={y2}
-            stroke={lineColor(line)}
-            strokeWidth={strokeWidth(line)}
-            strokeLinecap="round"
-            style={{ animationDelay: `${i * 200}ms` }}
+            stroke="rgba(255,255,255,0.15)"
+            strokeWidth={1}
+            data-guide="true"
+            style={{ animationDelay: `${i * 100 + 500}ms` }}
           />
         )
       })}
 
-      {lines.filter((l) => l.strength >= 0.1).map((line, i) => {
-        const cx = (line.startPoint.x + line.endPoint.x) / 2 * w
-        const cy = (line.startPoint.y + line.endPoint.y) / 2 * h
+      {detectedLines.map((line, i) => {
+        const x1 = line.startPoint.x * w
+        const y1 = line.startPoint.y * h
+        const x2 = line.endPoint.x * w
+        const y2 = line.endPoint.y * h
+        const opacity = Math.max(0.3, Math.min(0.9, line.strength * 2))
         return (
-          <circle
-            key={`dot-${i}`}
-            cx={cx}
-            cy={cy}
-            r={3}
-            fill="rgba(255,255,255,0.8)"
-            style={{ animationDelay: `${i * 200 + 800}ms` }}
+          <line
+            key={`detected-${i}`}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
+            stroke={`rgba(255,255,255,${opacity})`}
+            strokeWidth={1.5}
+            strokeLinecap="round"
+            style={{ animationDelay: `${i * 150}ms` }}
           />
         )
       })}

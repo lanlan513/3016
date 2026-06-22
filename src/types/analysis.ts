@@ -11,6 +11,8 @@ export interface CompositionLine {
   strength: number
   startPoint: { x: number; y: number }
   endPoint: { x: number; y: number }
+  isGuide?: boolean
+  label?: string
 }
 
 export interface StyleTag {

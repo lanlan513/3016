@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
-import { Upload, Image as ImageIcon, X } from 'lucide-react'
+import { Upload, Image as ImageIcon, X, RefreshCw } from 'lucide-react'
 import { useAnalysisStore } from '@/store/useAnalysisStore'
 import { cn } from '@/lib/utils'
 
@@ -30,44 +30,63 @@ export default function UploadZone() {
     setIsDragOver(false)
   }, [])
 
-  const handleClick = useCallback(() => {
+  const handleClickUpload = useCallback(() => {
     inputRef.current?.click()
   }, [])
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) handleFile(file)
+    e.target.value = ''
   }, [handleFile])
 
   const handleClear = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
     e.stopPropagation()
     reset()
   }, [reset])
 
   if (imageUrl) {
     return (
-      <div className="relative w-full max-w-[640px] mx-auto group cursor-pointer" onClick={handleClick}>
-        <div className="relative overflow-hidden border border-neutral-200 bg-neutral-50">
+      <div className="w-full max-w-[640px] mx-auto">
+        <div className="relative overflow-hidden border border-neutral-200 bg-neutral-50 group">
           <img
             src={imageUrl}
             alt="Uploaded"
-            className="w-full h-auto max-h-[500px] object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+            className="w-full h-auto max-h-[500px] object-contain"
           />
           <button
             onClick={handleClear}
-            className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-white/90 border border-neutral-200 text-neutral-500 hover:text-neutral-900 hover:border-neutral-400 transition-all duration-200"
+            className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center bg-white/95 border border-neutral-200 text-neutral-600 hover:text-neutral-900 hover:border-neutral-400 transition-all duration-200 hover:scale-105"
+            title="删除图片"
           >
-            <X size={14} />
+            <X size={16} />
           </button>
-          <div className="absolute inset-0 bg-neutral-900/0 group-hover:bg-neutral-900/5 transition-colors duration-300" />
+          <div className="absolute inset-0 bg-neutral-900/0 group-hover:bg-neutral-900/0 transition-colors duration-300" />
         </div>
+        <div className="mt-4 flex justify-center gap-3">
+          <button
+            onClick={handleClickUpload}
+            className="inline-flex items-center gap-2 px-5 py-2 border border-neutral-200 text-sm text-neutral-600 hover:border-neutral-400 hover:text-neutral-900 transition-all duration-200"
+          >
+            <RefreshCw size={14} />
+            重新上传
+          </button>
+        </div>
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleChange}
+          className="hidden"
+        />
       </div>
     )
   }
 
   return (
     <div
-      onClick={handleClick}
+      onClick={handleClickUpload}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}

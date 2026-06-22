@@ -7,6 +7,7 @@ import PaletteExtractor from './PaletteExtractor'
 import ColorMatrix from './ColorMatrix'
 import CompositionAnalyzer from './CompositionAnalyzer'
 import StyleTagCloud from './StyleTagCloud'
+import AestheticMovements from './AestheticMovements'
 import { motion, AnimatePresence } from 'motion/react'
 
 export default function AnalysisPanel() {
@@ -99,6 +100,12 @@ export default function AnalysisPanel() {
 
             <div>
               <StyleTagCloud tags={result.tags} />
+            </div>
+
+            <div className="section-divider" />
+
+            <div>
+              <AestheticMovements tags={result.tags} />
             </div>
           </motion.div>
         )}

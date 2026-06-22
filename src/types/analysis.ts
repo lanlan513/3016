@@ -21,6 +21,19 @@ export interface StyleTag {
   category: 'color' | 'composition' | 'mood'
 }
 
+export interface AestheticMovement {
+  id: string
+  name: string
+  nameEn: string
+  era: string
+  origin: string
+  philosophy: string
+  representatives: string[]
+  principles: string[]
+  matchedTags: string[]
+  accentColor: string
+}
+
 export interface AnalysisResult {
   palette: ColorSwatch[]
   composition: CompositionLine[]
